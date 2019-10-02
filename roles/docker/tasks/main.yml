@@ -4,12 +4,7 @@
     name: [ "linux-modules-extra-{{ ansible_kernel }}", "linux-image-extra-virtual" ]
 - name: Install prereqs for docker repo
   apt:
-    name: "{{ item }}"
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - software-properties-common
+    name: [ apt-transport-https, ca-certificates, curl, software-properties-common ]
 - name: Install docker apt-key
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
@@ -28,3 +23,16 @@
   user:
     name: vagrant
     groups: [docker]
+- name: create jenkins ssh keypair
+  openssh_keypair:
+    path: /home/vagrant/.ssh/jenkins
+    owner: vagrant
+    group: vagrant
+    type: rsa
+    size: 4096
+    state: present
+- name: ensure jenkins.pub is in authorized_keys
+  authorized_key:
+    key: "{{ lookup('file', '/home/vagrant/.ssh/jenkins.pub') }}"
+    user: vagrant
+    state: present
