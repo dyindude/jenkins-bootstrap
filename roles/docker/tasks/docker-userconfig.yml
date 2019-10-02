@@ -1,5 +1,0 @@
----
-- name: add vagrant user to docker group
-  user:
-    name: vagrant
-    groups: [docker]
