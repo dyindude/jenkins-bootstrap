@@ -2,10 +2,10 @@
 node('master') {
     checkout scm
     def test = new File("${WORKSPACE}/docker/jenkins/env/test").readLines()
-    def hostinfo = new File("${WORKSPACE}/docker/jenkins/hostinfo").readLines()
-    withEnv(test + hostinfo) {
+    withEnv(test + ["HOST_IP=${HOST_IP}"]) {
         dir("docker/jenkins"){
             stage('test build') {
+              sh 'env'
               sh 'grep FROM Dockerfile | awk \'{print $2}\' | xargs docker pull'
               sh '''docker-compose -p ${ENVIRONMENT} build && \
                     docker-compose -p ${ENVIRONMENT} down -v && \
@@ -19,8 +19,7 @@ node('master') {
 }
 node('vagrant') {
     def prod = new File("${WORKSPACE}/docker/jenkins/env/prod").readLines()
-    def hostinfo = new File("${WORKSPACE}/docker/jenkins/hostinfo").readLines()
-    withEnv(prod + hostinfo) {
+    withEnv(prod + ["HOST_IP=${HOST_IP}"]) {
         dir("docker/jenkins"){
             checkout scm
             stage('restart Jenkins') {
