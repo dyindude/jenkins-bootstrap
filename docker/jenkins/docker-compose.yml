@@ -5,14 +5,15 @@ services:
     build: .
     ports:
       - 8080
-    hostname: ${ENVIRONMENT}
-    container_name: ${ENVIRONMENT}
+    hostname: ${SERVICE}${ENVIRONMENT_SUFFIX}
+    container_name: ${SERVICE}${ENVIRONMENT_SUFFIX}
     environment:
       DOMAIN: ${DOMAIN}
       ENVIRONMENT: ${ENVIRONMENT}
+      SERVICE: ${SERVICE}
       HOST_IP: ${HOST_IP}
-      SERVICE_8080_NAME: ${ENVIRONMENT}
-      VIRTUAL_HOST: ${ENVIRONMENT}.${DOMAIN}
+      SERVICE_8080_NAME: ${SERVICE}${ENVIRONMENT_SUFFIX}
+      VIRTUAL_HOST: ${SERVICE}${ENVIRONMENT_SUFFIX}.${DOMAIN}
       VIRTUAL_PORT: 8080
       CASC_JENKINS_CONFIG: /var/jenkins_static/casc
       JAVA_OPTS: -Djenkins.install.runSetupWizard=false

@@ -7,12 +7,12 @@ node('master') {
             stage('test build') {
               sh 'env'
               sh 'grep FROM Dockerfile | awk \'{print $2}\' | xargs docker pull'
-              sh '''docker-compose -p ${ENVIRONMENT} build && \
-                    docker-compose -p ${ENVIRONMENT} down -v && \
-                    docker-compose -p ${ENVIRONMENT} up -d'''
+              sh '''docker-compose -p ${SERVICE}${ENVIRONMENT} build && \
+                    docker-compose -p ${SERVICE}${ENVIRONMENT} down -v && \
+                    docker-compose -p ${SERVICE}${ENVIRONMENT} up -d'''
               sh 'sleep 30'
               sh 'helpers/check_status_code https://${ENVIRONMENT}.${DOMAIN}/login'
-              sh 'docker-compose -p ${ENVIRONMENT} down -v'
+              sh 'docker-compose -p ${SERVICE}${ENVIRONMENT} down -v'
             }
         }
     }
@@ -23,9 +23,9 @@ node('vagrant') {
         dir("docker/jenkins"){
             checkout scm
             stage('restart Jenkins') {
-              sh '''docker-compose -p ${ENVIRONMENT} build && \
-                    docker-compose -p ${ENVIRONMENT} down && \
-                    docker-compose -p ${ENVIRONMENT} up -d'''
+              sh '''docker-compose -p ${SERVICE}${ENVIRONMENT} build && \
+                    docker-compose -p ${SERVICE}${ENVIRONMENT} down && \
+                    docker-compose -p ${SERVICE}${ENVIRONMENT} up -d'''
             }
         }
     }

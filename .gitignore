@@ -4,3 +4,4 @@ docker/nginx/nginx-certs/*
 !docker/nginx/nginx-certs/.keep
 certs/*
 !certs/.keep
+hostinfo

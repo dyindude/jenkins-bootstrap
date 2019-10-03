@@ -20,22 +20,18 @@
         owner: vagrant
         group: vagrant
     - name: write HOST_IP to hostinfo
-      shell: "echo HOST_IP={{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}} > /vagrant/docker/jenkins/hostinfo"
-    - name: write DOMAIN to hostinfo
-      shell: "echo DOMAIN={{ cert_domain }} >> /vagrant/docker/jenkins/hostinfo"
-    - name: launch nginx
-      shell: docker-compose up -d
-      args:
-        chdir: "{{ item }}"
+      lineinfile:
+        path: /vagrant/hostinfo
+        line: "{{ item }}"
+        state: present
+        create: yes
+      with_items:
+        - "export HOST_IP={{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+        - "export DOMAIN={{ cert_domain }}"
+    - name: run startup script
+      shell: ./init.sh
       become: yes
       become_user: vagrant
-      environment:
-        HOST_IP: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
-        DOMAIN: "{{ cert_domain }}"
-        ENVIRONMENT: "jenkins"
-      with_items:
-        - "/vagrant/docker/nginx"
-        - "/vagrant/docker/jenkins"
     - name: show public key to import to github
       debug:
         msg: "{{ lookup( 'file', '/home/vagrant/.ssh/jenkins.pub' ) }}"
