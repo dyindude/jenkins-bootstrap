@@ -18,10 +18,10 @@ node('master') {
     }
 }
 node('vagrant') {
+    checkout scm
     def prod = new File("${WORKSPACE}/docker/jenkins/env/prod").readLines()
     withEnv(prod + ["HOST_IP=${HOST_IP}","DOMAIN=${DOMAIN}"]) {
         dir("docker/jenkins"){
-            checkout scm
             stage('restart Jenkins') {
               sh '''docker-compose -p ${SERVICE}${ENVIRONMENT} build && \
                     docker-compose -p ${SERVICE}${ENVIRONMENT} down && \
