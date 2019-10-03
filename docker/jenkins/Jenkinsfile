@@ -1,6 +1,9 @@
+
 node('master') {
-    withEnv(['ENVIRONMENT=jenkinstest','DOMAIN=devbootstrap.dyindude']) {
-        checkout scm
+    checkout scm
+    def test = new File("${WORKSPACE}/docker/jenkins/env/test").readLines()
+    def hostinfo = new File("${WORKSPACE}/docker/jenkins/hostinfo").readLines()
+    withEnv(test + hostinfo) {
         stage('test build') {
           sh 'grep FROM Dockerfile | awk \'{print $2}\' | xargs docker pull'
           sh '''docker-compose -p ${ENVIRONMENT} build && \
@@ -13,7 +16,9 @@ node('master') {
     }
 }
 node('vagrant') {
-    withEnv(['ENVIRONMENT=jenkins','DOMAIN=devbootstrap.dyindude']) {
+    def prod = new File("${WORKSPACE}/docker/jenkins/env/prod").readLines()
+    def hostinfo = new File("${WORKSPACE}/docker/jenkins/hostinfo").readLines()
+    withEnv(prod + hostinfo) {
         checkout scm
         stage('copy artifacts') {
           copyArtifacts('cidr')

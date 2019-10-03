@@ -19,6 +19,10 @@
         dest: "/vagrant/docker/nginx/nginx-certs/{{ cert_domain }}.crt"
         owner: vagrant
         group: vagrant
+    - name: write HOST_IP to hostinfo
+      shell: "echo HOST_IP={{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}} > /vagrant/docker/jenkins/hostinfo"
+    - name: write DOMAIN to hostinfo
+      shell: "echo DOMAIN={{ cert_domain }} >> /vagrant/docker/jenkins/hostinfo"
     - name: launch nginx
       shell: docker-compose up -d
       args:
