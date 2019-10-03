@@ -18,6 +18,9 @@ services:
       CASC_JENKINS_CONFIG: /var/jenkins_static/casc
       JAVA_OPTS: -Djenkins.install.runSetupWizard=false
       SECRETS: /secrets
+    extra_hosts:
+      - "${SERVICE}.${DOMAIN}:${HOST_IP}"
+      - "${SERVICE}test.${DOMAIN}:${HOST_IP}"
     volumes:
       - home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
