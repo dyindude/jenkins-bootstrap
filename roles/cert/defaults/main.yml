@@ -10,10 +10,11 @@ cert_hosts_canonical: "{{ cert_canonical | default(false) | bool | ternary([cert
 cert_canonical: false
 cert_algo: "rsa"
 cert_size: 4096
-cert_country: "Some Country"
+cert_country: "SC"
 cert_locality: "Some City"
 cert_organization: "Some Org"
 cert_ou: "Some OU"
 cert_state: "Some State"
 cert_domain: "example.com"
 cert_profile: "server"
+cert_directory: "output"

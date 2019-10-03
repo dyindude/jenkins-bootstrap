@@ -4,40 +4,39 @@
 - name: write out ca template
   template:
     src: cfssl.json
-    dest: docker/nginx-certs/{{ cert_domain }}.json
+    dest: "{{ cert_directory }}/{{ cert_domain }}.json"
   with_items:
     - "{{ cert_hosts }}"
 - name: copy ca config template
   template:
     src: config.json
-    dest: docker/nginx-certs/config.json
+    dest: "{{ cert_directory }}/config.json"
 
 - name: manage ca certificate
   block:
     - name: check if ca cert has expired
       openssl_certificate:
-        path: docker/nginx-certs/ca.{{ cert_domain }}.pem
+        path: "{{ cert_directory }}/ca.{{ cert_domain }}.pem"
         has_expired: False
         valid_at: "{{ cert_valid_at }}"
         provider: assertonly
   rescue:
     - name: generate ca cert/key
-      shell: "{{ cfssl }} genkey -initca workdir/docker/nginx-certs/{{ cert_domain }}.json | {{ cfssljson }} -bare workdir/docker/nginx-certs/ca.{{ cert_domain }}"
+      shell: "{{ cfssl }} genkey -initca workdir/{{ cert_directory }}/{{ cert_domain }}.json | {{ cfssljson }} -bare workdir/{{ cert_directory }}/ca.{{ cert_domain }}"
 
 - name: manage host certificate
   block:
     - name: check if cert has expired
       openssl_certificate:
-        path: docker/nginx-certs/{{ cert_filename }}.pem
+        path: "{{ cert_directory }}/{{ cert_filename }}.pem"
         has_expired: False
         valid_at: "{{ cert_valid_at }}"
         provider: assertonly
     - name: check if our ca cert is valid for this cert
-      shell: "[[ $(openssl verify -CAfile docker/nginx-certs/ca.{{ cert_domain }}.pem docker/nginx-certs/{{ cert_filename }}.pem |& grep OK | wc -c) -ne 0 ]]"
+      shell: "[[ $(openssl verify -CAfile {{ cert_directory }}/ca.{{ cert_domain }}.pem {{ cert_directory }}/{{ cert_filename }}.pem |& grep OK | wc -c) -ne 0 ]]"
       args:
         executable: /bin/bash
       changed_when: False
   rescue:
     - name: generate host certs/keys
-      shell: "{{ cfssl }} gencert -ca workdir/docker/nginx-certs/ca.{{ cert_domain }}.pem -ca-key workdir/docker/nginx-certs/ca.{{ cert_domain }}-key.pem -cn={{ cert_hosts | map('regex_replace','$','.' + cert_domain) | list | first }} -hostname={{ (cert_hosts_canonical + ((cert_hosts | map('regex_replace','$','.' + cert_domain)) | list)) | join(',') }} -config=workdir/docker/nginx-certs/config.json -profile={{ cert_profile }} workdir/docker/nginx-certs/{{ cert_domain }}.json | {{ cfssljson }} -bare workdir/docker/nginx-certs/{{ cert_filename }}"
-
+      shell: "{{ cfssl }} gencert -ca workdir/{{ cert_directory }}/ca.{{ cert_domain }}.pem -ca-key workdir/{{ cert_directory }}/ca.{{ cert_domain }}-key.pem -cn={{ cert_hosts | map('regex_replace','$','.' + cert_domain) | list | first }} -hostname={{ (cert_hosts_canonical + ((cert_hosts | map('regex_replace','$','.' + cert_domain)) | list)) | join(',') }} -config=workdir/{{ cert_directory }}/config.json -profile={{ cert_profile }} workdir/{{ cert_directory }}/{{ cert_domain }}.json | {{ cfssljson }} -bare workdir/{{ cert_directory }}/{{ cert_filename }}"

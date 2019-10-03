@@ -1,8 +1,21 @@
 ---
 - hosts: all
   vars:
+    cert_directory: "certs" 
     cert_domain: "devbootstrap.dyindude"
   roles:
     - role: bootstrap
     - { role: cert, cert_hosts: [ "*" ], cert_canonical: true, cert_profile: "webapp" }
-
+  tasks:
+    - name: copy key to nginx folder
+      copy:
+        src: "/vagrant/certs/wildcard.{{ cert_domain }}-key.pem"
+        dest: "/vagrant/docker/nginx/nginx-certs/{{ cert_domain }}.key"
+        owner: vagrant
+        group: vagrant
+    - name: copy cert to nginx folder
+      copy:
+        src: "/vagrant/certs/wildcard.{{ cert_domain }}.pem"
+        dest: "/vagrant/docker/nginx/nginx-certs/{{ cert_domain }}.crt"
+        owner: vagrant
+        group: vagrant
