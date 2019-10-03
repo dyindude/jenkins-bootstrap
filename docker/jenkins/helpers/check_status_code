@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+URL=$1
+STATUS_CODE=$(curl -k --write-out %{http_code} --silent --output /dev/null $URL)
+if [ $STATUS_CODE != "200" ]; then
+    echo expected 200, got $STATUS_CODE
+    exit 1
+fi

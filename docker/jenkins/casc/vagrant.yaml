@@ -1,0 +1,31 @@
+jenkins:
+  nodes:
+    - permanent:
+        labelString: "vagrant"
+        mode: EXCLUSIVE
+        name: "vagrant"
+        remoteFS: "/home/vagrant"
+        launcher:
+          ssh:
+            host: "${HOST_IP}"
+            port: 22
+            credentialsId: vagrant
+            launchTimeOutSeconds: 60
+            maxNumRetries: 3
+            retryWaitTime: 30
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: "GLOBAL"
+              id: "vagrant"
+              username: "vagrant"
+              passphrase: ""
+              description: "ssh key for vagrant host"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${ssh-agent-access-key}"

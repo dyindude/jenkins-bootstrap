@@ -1,0 +1,36 @@
+version: "3"
+services:
+  jenkins:
+    user: 1000:999
+    build: .
+    ports:
+      - 8080
+    hostname: ${ENVIRONMENT}
+    container_name: ${ENVIRONMENT}
+    environment:
+      DOMAIN: ${DOMAIN}
+      ENVIRONMENT: ${ENVIRONMENT}
+      HOST_IP: ${HOST_IP}
+      SERVICE_8080_NAME: ${ENVIRONMENT}
+      VIRTUAL_HOST: ${ENVIRONMENT}.${DOMAIN}
+      VIRTUAL_PORT: 8080
+      CASC_JENKINS_CONFIG: /var/jenkins_static/casc
+      JAVA_OPTS: -Djenkins.install.runSetupWizard=false
+      SECRETS: /secrets
+    volumes:
+      - home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/vagrant/.ssh/jenkins:/secrets/ssh-agent-access-key
+    networks:
+      - prod
+      - test
+volumes:
+  home:
+    driver: local
+networks:
+  prod:
+    external:
+      name: prod
+  test:
+    external:
+      name: test

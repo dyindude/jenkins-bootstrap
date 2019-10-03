@@ -1,6 +1,6 @@
 .vagrant
 .vagrant/*
-docker/nginx-certs/*
-!docker/nginx-certs/.keep
+docker/nginx/nginx-certs/*
+!docker/nginx/nginx-certs/.keep
 certs/*
 !certs/.keep

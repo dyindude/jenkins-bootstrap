@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
         libvirt.cpus = 2
         config.vm.synced_folder "./", "/vagrant", type: "nfs", nfs_version: 4, "nfs_udp": false, mount_options: ["rw", "vers=4", "tcp", "nolock"]
     end
+    config.vm.network "forwarded_port", guest: 443, host: 4443, host_ip: "0.0.0.0"
 
     config.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "provision.yml"

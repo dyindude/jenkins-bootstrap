@@ -1,0 +1,13 @@
+workflow-aggregator:latest
+matrix-auth:latest
+blueocean:latest
+pipeline-maven:latest
+pipeline-utility-steps:latest #needed for readJSON and other functions
+configuration-as-code:latest
+configuration-as-code-support:latest
+job-dsl:latest
+ssh-credentials:latest
+ssh-slaves:latest
+docker-plugin:latest
+copyartifact:latest
+terraform:latest

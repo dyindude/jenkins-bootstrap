@@ -1,0 +1,66 @@
+unclassified:
+  location:
+    url: https://${ENVIRONMENT}.${DOMAIN}
+#signatures here are required for the pattern we use for loading environment variables into pipelines
+security:
+  scriptApproval:
+    approvedSignatures:
+      - new java.io.File java.lang.String
+      - staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods readLines java.io.File
+      - staticMethod org.codehaus.groovy.runtime.ResourceGroovyMethods readLines java.io.File
+jenkins:
+  systemMessage: "beep boop i'm a jenkins instance"
+  numExecutors: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: vagrant
+         password: vagrant
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Read:authenticated"
+        - "Job/Read:authenticated"
+        - "View/Read:authenticated"
+        - "Overall/Administer:authenticated"
+  clouds:
+    - docker:
+        name: "docker"
+        dockerApi:
+          dockerHost:
+            uri: "unix:///var/run/docker.sock"
+        templates:
+          - labelString: "docker-agent"
+            dockerTemplateBase:
+              image: "jenkins/slave"
+              volumes:
+                - hello:/hello
+                - world:/world
+              environmentsString: |
+                hello=world
+                foo=bar
+            remoteFs: "/home/jenkins/agent"
+            connector:
+              attach:
+                user: "jenkins"
+            instanceCapStr: "10"
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: "GLOBAL"
+              id: "deploy-key-shared-library"
+              username: "root"
+              passphrase: ""
+              description: "Deploy key for global shared library"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${ssh-agent-access-key}"
+
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
