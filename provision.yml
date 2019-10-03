@@ -1,10 +1,8 @@
 ---
 - hosts: all
+  vars:
+    cert_domain: "devbootstrap.dyindude"
   roles:
     - role: bootstrap
-    #    - role: ppas
-    #- role: packages
-    #- role: discord
-    #    - role: dotfiles
-    #- role: xorg
-    #- role: chrome
+    - { role: cert, cert_hosts: [ "*" ], cert_canonical: true, cert_profile: "webapp" }
+

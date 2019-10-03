@@ -1,0 +1,16 @@
+{
+    "hosts": [ "ca.{{ cert_domain }}" ],
+    "key": {
+        "algo": "{{ cert_algo }}",
+        "size": {{ cert_size }}
+    },
+    "names": [
+        {
+            "C":  "{{ cert_country }}",
+            "L":  "{{ cert_locality }}",
+            "O":  "{{ cert_organization }}",
+            "OU": "{{ cert_ou }}",
+            "ST": "{{ cert_state }}"
+        }
+    ]
+}

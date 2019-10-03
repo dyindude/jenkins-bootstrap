@@ -1,0 +1,19 @@
+---
+cfssl: "docker run --rm -v $(pwd):/go/src/github.com/cloudflare/cfssl/workdir cfssl/cfssl"
+cfssljson: "docker run -i --rm -v $(pwd):/go/src/github.com/cloudflare/cfssl/workdir --entrypoint=cfssljson cfssl/cfssl"
+cert_date_command: "{{ (ansible_os_family == 'Darwin') | ternary('gdate', 'date') }}"
+cert_valid_at: "{{ lookup('pipe', cert_date_command + ' --date=30days +%Y%m%d%H%M%s%z') }}"
+cert_force_regenerate: false
+cert_hosts:
+cert_filename: "{{ ((cert_hosts | first) == '*') | ternary('wildcard', cert_hosts | first) + '.' + cert_domain }}"
+cert_hosts_canonical: "{{ cert_canonical | default(false) | bool | ternary([cert_domain], []) }}"
+cert_canonical: false
+cert_algo: "rsa"
+cert_size: 4096
+cert_country: "Some Country"
+cert_locality: "Some City"
+cert_organization: "Some Org"
+cert_ou: "Some OU"
+cert_state: "Some State"
+cert_domain: "example.com"
+cert_profile: "server"

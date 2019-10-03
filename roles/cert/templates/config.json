@@ -1,0 +1,23 @@
+{
+    "signing": {
+        "profiles": {
+            "ca": {
+                "usages": ["cert sign"],
+                "expiry": "8760h"
+            },
+            "server": {
+                "usages": ["digital signature", "key agreement", "key encipherment", "server auth"],
+                "expiry": "8760h"
+            },
+            "client": {
+                "usages": ["digital signature", "key agreement", "key encipherment", "client auth"],
+                "expiry": "8760h"
+            },
+            "webapp": {
+                "usages": ["digital signature", "key encipherment", "server auth"],
+                "expiry": "8760h"
+            }
+
+        }
+    }
+}

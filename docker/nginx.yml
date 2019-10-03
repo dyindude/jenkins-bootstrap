@@ -1,0 +1,31 @@
+version: '3'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    networks:
+      - prod
+      - test
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx-certs:/etc/nginx/certs:ro
+      - nginx-vhost:/etc/nginx/vhost.d
+      - nginx-html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+volumes:
+  nginx-certs:
+    driver: local
+  nginx-vhost:
+    driver: local
+  nginx-html:
+    driver: local
+networks:
+  prod:
+    external:
+      name: prod
+  test:
+    external:
+      name: test
