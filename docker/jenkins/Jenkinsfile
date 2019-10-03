@@ -2,7 +2,7 @@
 node('master') {
     checkout scm
     def test = new File("${WORKSPACE}/docker/jenkins/env/test").readLines()
-    withEnv(test + ["HOST_IP=${HOST_IP}"]) {
+    withEnv(test + ["HOST_IP=${HOST_IP}","DOMAIN=${DOMAIN}"]) {
         dir("docker/jenkins"){
             stage('test build') {
               sh 'env'
@@ -19,7 +19,7 @@ node('master') {
 }
 node('vagrant') {
     def prod = new File("${WORKSPACE}/docker/jenkins/env/prod").readLines()
-    withEnv(prod + ["HOST_IP=${HOST_IP}"]) {
+    withEnv(prod + ["HOST_IP=${HOST_IP}","DOMAIN=${DOMAIN}"]) {
         dir("docker/jenkins"){
             checkout scm
             stage('restart Jenkins') {
