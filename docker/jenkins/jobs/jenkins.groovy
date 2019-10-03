@@ -1,7 +1,7 @@
 pipelineJob('jenkins') {
 		definition {
 				cpsScm {
-						scriptPath 'Jenkinsfile'
+						scriptPath 'docker/jenkins/Jenkinsfile'
 						scm {
 							git {
 								remote {
