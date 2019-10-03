@@ -10,7 +10,7 @@ node('master') {
               sh '''docker-compose -p ${SERVICE}${ENVIRONMENT} build && \
                     docker-compose -p ${SERVICE}${ENVIRONMENT} down -v && \
                     docker-compose -p ${SERVICE}${ENVIRONMENT} up -d'''
-              sh 'echo sleeping to let jenkins boot up... && sleep 60'
+              sh 'echo sleeping to let jenkins boot up... && sleep 30'
               sh 'helpers/check_status_code https://${SERVICE}${ENVIRONMENT}.${DOMAIN}/login'
               sh 'docker-compose -p ${SERVICE}${ENVIRONMENT} down -v'
             }
