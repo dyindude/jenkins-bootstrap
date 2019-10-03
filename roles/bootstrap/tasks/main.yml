@@ -36,3 +36,18 @@
     key: "{{ lookup('file', '/home/vagrant/.ssh/jenkins.pub') }}"
     user: vagrant
     state: present
+- name: set up networks
+  docker_network:
+    name: "{{ item.name }}"
+    driver: bridge
+    ipam_config:
+      - subnet: "{{ item.subnet }}"
+        gateway: "{{ item.gateway }}"
+  with_items:
+    - name: prod
+      subnet: 172.22.0.0/16
+      gateway: 172.22.0.1
+    - name: test
+      subnet: 172.26.0.0/16
+      gateway: 172.26.0.1
+
