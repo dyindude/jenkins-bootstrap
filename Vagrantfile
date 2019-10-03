@@ -14,8 +14,8 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.provision "ansible_local" do |ansible|
-    ansible.playbook = "provision.yml"
-    ansible.become = true
-    ansible.raw_arguments = ["--extra-vars ran_from_vagrant='true'"]
-  end
+      ansible.playbook = "provision.yml"
+      ansible.become = true
+      ansible.raw_arguments = ["--extra-vars ran_from_vagrant='true'"]
+    end
 end
