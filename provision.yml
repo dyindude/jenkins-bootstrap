@@ -36,4 +36,6 @@
       with_items:
         - "/vagrant/docker/nginx"
         - "/vagrant/docker/jenkins"
-
+    - name: show public key to import to github
+      debug:
+        msg: "{{ lookup( 'file', '/home/vagrant/.ssh/jenkins.pub' ) }}"
