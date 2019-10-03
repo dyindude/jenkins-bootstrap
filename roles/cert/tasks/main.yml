@@ -1,6 +1,4 @@
 ---
-- debug:
-    var: cert_valid_at
 - name: write out ca template
   template:
     src: cfssl.json
