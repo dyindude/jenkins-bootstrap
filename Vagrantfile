@@ -3,15 +3,15 @@
 Vagrant.configure("2") do |config|
     config.vm.hostname = "jenkins-bootstrap"
     config.vm.box = "generic/ubuntu1804"
-    config.vm.provider "virtualbox" do |v|
+    config.vm.provider "virtualbox" do |v, override|
         v.memory = 2048
         v.cpus = 2
-        config.vm.synced_folder "./", "/vagrant"
+        override.vm.synced_folder "./", "/vagrant"
     end
-    config.vm.provider :libvirt do |libvirt|
+    config.vm.provider :libvirt do |libvirt, override|
         libvirt.memory = 2048
         libvirt.cpus = 2
-        config.vm.synced_folder "./", "/vagrant", type: "nfs", nfs_version: 4, "nfs_udp": false, mount_options: ["rw", "vers=4", "tcp", "nolock"]
+        override.vm.synced_folder "./", "/vagrant", type: "nfs", nfs_version: 4, "nfs_udp": false, mount_options: ["rw", "vers=4", "tcp", "nolock"]
     end
     config.vm.network "forwarded_port", guest: 443, host: 4443, host_ip: "0.0.0.0"
 
