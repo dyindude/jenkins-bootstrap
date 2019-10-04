@@ -19,6 +19,10 @@
         dest: "/vagrant/docker/nginx/nginx-certs/{{ cert_domain }}.crt"
         owner: vagrant
         group: vagrant
+    - name: make sure old hostinfo is missing
+      file:
+        path: /vagrant/hostinfo
+        state: absent
     - name: write HOST_IP to hostinfo
       lineinfile:
         path: /vagrant/hostinfo
@@ -28,10 +32,3 @@
       with_items:
         - "export HOST_IP={{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
         - "export DOMAIN={{ cert_domain }}"
-    - name: run startup script
-      shell: ./init.sh
-      become: yes
-      become_user: vagrant
-    - name: show public key to import to github
-      debug:
-        msg: "{{ lookup( 'file', '/home/vagrant/.ssh/jenkins.pub' ) }}"

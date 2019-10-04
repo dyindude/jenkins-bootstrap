@@ -19,4 +19,6 @@ Vagrant.configure("2") do |config|
       ansible.become = true
       ansible.raw_arguments = ["--extra-vars ran_from_vagrant='true'"]
     end
+    config.vm.provision "shell",
+        inline: "/vagrant/init.sh"
 end
