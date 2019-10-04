@@ -1,5 +1,6 @@
 def test
 def prod
+def hostinfo = ["HOST_IP=${HOST_IP}","DOMAIN=${DOMAIN}"]
 node('master') {
     checkout scm
     test = new File("${WORKSPACE}/docker/jenkins/env/test").readLines()
@@ -21,7 +22,6 @@ node('master') {
 }
 node('vagrant') {
     checkout scm
-    def hostinfo = new File("/vagrant/hostinfo").readLines()
     withEnv(prod + hostinfo) {
         dir("docker/jenkins"){
             stage('restart Jenkins') {
