@@ -25,6 +25,8 @@
   user:
     name: vagrant
     groups: [docker]
+- name: reset ssh connection to allow user changes for vagrant to take effect
+  meta: reset_connection
 - name: create jenkins ssh keypair
   openssh_keypair:
     path: /home/vagrant/.ssh/jenkins
