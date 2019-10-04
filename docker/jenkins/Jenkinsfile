@@ -21,7 +21,8 @@ node('master') {
 }
 node('vagrant') {
     checkout scm
-    withEnv(prod + ["HOST_IP=${HOST_IP}","DOMAIN=${DOMAIN}"]) {
+    def hostinfo = new File("/vagrant/hostinfo").readLines()
+    withEnv(prod + hostinfo) {
         dir("docker/jenkins"){
             stage('restart Jenkins') {
               sh '''docker-compose -p ${SERVICE}${ENVIRONMENT} build && \
