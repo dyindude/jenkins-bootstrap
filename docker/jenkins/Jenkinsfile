@@ -2,6 +2,9 @@
 node('master') {
     checkout scm
     def test = new File("${WORKSPACE}/docker/jenkins/env/test").readLines()
+    def prod = new File("${WORKSPACE}/docker/jenkins/env/prod").readLines()
+}
+node('master') {
     withEnv(test + ["HOST_IP=${HOST_IP}","DOMAIN=${DOMAIN}"]) {
         dir("docker/jenkins"){
             stage('test build') {
@@ -19,8 +22,6 @@ node('master') {
 }
 node('vagrant') {
     checkout scm
-    sh 'pwd'
-    def prod = new File("${WORKSPACE}/docker/jenkins/env/prod").readLines()
     withEnv(prod + ["HOST_IP=${HOST_IP}","DOMAIN=${DOMAIN}"]) {
         dir("docker/jenkins"){
             stage('restart Jenkins') {
